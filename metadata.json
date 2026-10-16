@@ -1,0 +1,6 @@
+{
+  "name": "Hệ Thống Giám Sát Hoạt Động Tòa Án - Quản Lý Thụ Lý & Giải Quyết Án",
+  "description": "Ứng dụng chuyên dụng cho cán bộ Tòa án nhân dân: nhập thụ lý án mới, phân công Thẩm phán - Thư ký - Hội thẩm, theo dõi tiến độ thời gian thực, quản lý biện pháp ngăn chặn, tự động ban hành quyết định và xuất báo cáo thống kê định kỳ.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

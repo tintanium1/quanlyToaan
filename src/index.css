@@ -1,0 +1,35 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --font-sans: 'Be Vietnam Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    --font-serif: 'Times New Roman', Times, 'Lora', 'Merriweather', Cambria, Georgia, serif;
+    --font-mono: 'JetBrains Mono', 'Roboto Mono', Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+  }
+
+  html {
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  }
+
+  body {
+    font-family: var(--font-sans);
+    letter-spacing: -0.01em;
+  }
+
+  /* Ensure form inputs use the Vietnamese-supported font without glitching */
+  input, select, textarea, button, optgroup, option {
+    font-family: var(--font-sans) !important;
+  }
+
+  .font-serif, [class*="font-serif"] {
+    font-family: var(--font-serif) !important;
+  }
+
+  .font-mono, [class*="font-mono"] {
+    font-family: var(--font-mono) !important;
+  }
+}
