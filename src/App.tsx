@@ -26,7 +26,7 @@ import { LoginView } from './components/LoginView';
 import { ToastNotificationContainer } from './components/ToastNotificationContainer';
 import { CourtNotification, ActiveToast } from './types/notification';
 import { playNotificationSound } from './utils/notificationAudio';
-import { getDaysRemaining } from './utils/courtUtils';
+import { getDaysRemaining, getCaseTypeName } from './utils/courtUtils';
 import { hasPermission, isCaseAssignedToUser, getRoleBadge } from './utils/rbacUtils';
 import { PreventiveMeasure, CaseDecision } from './types/court';
 import { 
@@ -44,7 +44,8 @@ import {
   Printer,
   ShieldCheck,
   Key,
-  Bell
+  Bell,
+  Trash2
 } from 'lucide-react';
 
 const STORAGE_CASES_KEY = 'tand_cases_v1';
@@ -169,6 +170,9 @@ export default function App() {
   // Extension Modals State
   const [trialExtCase, setTrialExtCase] = useState<CourtCase | null>(null);
   const [detentionExtCase, setDetentionExtCase] = useState<{ caseItem: CourtCase; measure?: PreventiveMeasure } | null>(null);
+
+  // Case Deletion Confirmation State
+  const [caseToDelete, setCaseToDelete] = useState<CourtCase | null>(null);
 
   // Document templates state
   const [templates, setTemplates] = useState<DocumentTemplate[]>(getStoredTemplates);
@@ -550,6 +554,42 @@ export default function App() {
     }
   };
 
+  const handleRequestDeleteCase = (c: CourtCase) => {
+    if (!hasPermission(currentUser, 'canDeleteCase')) {
+      handleDenyPermission('Xóa hồ sơ vụ án khỏi hệ thống', 'Lãnh đạo Tòa án / Cán bộ Tổng hợp / Quản trị viên');
+      return;
+    }
+    setCaseToDelete(c);
+  };
+
+  const handleConfirmDeleteCase = () => {
+    if (!caseToDelete) return;
+    const targetId = caseToDelete.id;
+    const targetDocket = caseToDelete.docketNumber;
+    const targetTitle = caseToDelete.title;
+
+    setCases((prev) => prev.filter((c) => c.id !== targetId));
+    setTrialSessions((prev) => prev.filter((ts) => ts.caseId !== targetId));
+
+    if (activeCaseDetail && activeCaseDetail.id === targetId) {
+      setActiveCaseDetail(null);
+    }
+
+    if (pinnedCaseId === targetId) {
+      const remaining = cases.filter((c) => c.id !== targetId);
+      setPinnedCaseId(remaining.length > 0 ? remaining[0].id : '');
+    }
+
+    setCaseToDelete(null);
+
+    pushNotification({
+      type: 'CASE_DELETED',
+      title: 'ĐÃ XÓA VỤ ÁN KHỎI HỆ THỐNG',
+      message: `Đã xóa thành công vụ án số ${targetDocket} (${targetTitle}) khỏi sổ thụ lý và hệ thống dữ liệu.`,
+      actionLabel: 'Đã hoàn tất',
+    });
+  };
+
   const handleOpenTrialExtension = (c: CourtCase) => {
     if (!hasPermission(currentUser, 'canExtendPreparation')) {
       handleDenyPermission('Ký Quyết định gia hạn thời hạn chuẩn bị xét xử', 'Lãnh đạo Tòa án (Chánh án / Phó Chánh án)');
@@ -901,6 +941,14 @@ export default function App() {
                   <Printer className="w-3.5 h-3.5" />
                   <span>In biểu mẫu quyết định</span>
                 </button>
+                <button
+                  onClick={() => handleRequestDeleteCase(activeCaseDetail)}
+                  className="px-3 py-1 bg-rose-50 hover:bg-rose-100 text-rose-800 border border-rose-300 rounded text-xs font-bold transition-colors flex items-center gap-1 shadow-2xs"
+                  title="Xóa hồ sơ vụ án này khỏi hệ thống"
+                >
+                  <Trash2 className="w-3.5 h-3.5 text-rose-600" />
+                  <span>Xóa vụ án</span>
+                </button>
               </div>
             </div>
 
@@ -913,6 +961,7 @@ export default function App() {
               onBack={() => setActiveCaseDetail(null)}
               onOpenTrialExtension={handleOpenTrialExtension}
               onOpenDetentionExtension={handleOpenDetentionExtension}
+              onDeleteCase={handleRequestDeleteCase}
               currentUser={currentUser}
               onDenyPermission={handleDenyPermission}
             />
@@ -1097,6 +1146,7 @@ export default function App() {
                   onClearSearch={handleClearSearch}
                   onOpenTrialExtension={handleOpenTrialExtension}
                   onOpenDetentionExtension={handleOpenDetentionExtension}
+                  onDeleteCase={handleRequestDeleteCase}
                   currentUser={currentUser}
                   onDenyPermission={handleDenyPermission}
                 />
@@ -1132,6 +1182,7 @@ export default function App() {
                 onClearSearch={handleClearSearch}
                 onOpenTrialExtension={handleOpenTrialExtension}
                 onOpenDetentionExtension={handleOpenDetentionExtension}
+                onDeleteCase={handleRequestDeleteCase}
                 currentUser={currentUser}
                 onDenyPermission={handleDenyPermission}
               />
@@ -1166,6 +1217,7 @@ export default function App() {
                 onClearSearch={handleClearSearch}
                 onOpenTrialExtension={handleOpenTrialExtension}
                 onOpenDetentionExtension={handleOpenDetentionExtension}
+                onDeleteCase={handleRequestDeleteCase}
                 currentUser={currentUser}
                 onDenyPermission={handleDenyPermission}
               />
@@ -1200,6 +1252,7 @@ export default function App() {
                 onClearSearch={handleClearSearch}
                 onOpenTrialExtension={handleOpenTrialExtension}
                 onOpenDetentionExtension={handleOpenDetentionExtension}
+                onDeleteCase={handleRequestDeleteCase}
                 currentUser={currentUser}
                 onDenyPermission={handleDenyPermission}
               />
@@ -1234,6 +1287,7 @@ export default function App() {
                 onClearSearch={handleClearSearch}
                 onOpenTrialExtension={handleOpenTrialExtension}
                 onOpenDetentionExtension={handleOpenDetentionExtension}
+                onDeleteCase={handleRequestDeleteCase}
                 currentUser={currentUser}
                 onDenyPermission={handleDenyPermission}
               />
@@ -1268,6 +1322,7 @@ export default function App() {
                 onClearSearch={handleClearSearch}
                 onOpenTrialExtension={handleOpenTrialExtension}
                 onOpenDetentionExtension={handleOpenDetentionExtension}
+                onDeleteCase={handleRequestDeleteCase}
                 currentUser={currentUser}
                 onDenyPermission={handleDenyPermission}
               />
@@ -1302,6 +1357,7 @@ export default function App() {
                 onClearSearch={handleClearSearch}
                 onOpenTrialExtension={handleOpenTrialExtension}
                 onOpenDetentionExtension={handleOpenDetentionExtension}
+                onDeleteCase={handleRequestDeleteCase}
                 currentUser={currentUser}
                 onDenyPermission={handleDenyPermission}
               />
@@ -1588,6 +1644,96 @@ export default function App() {
         cases={cases}
         settings={settings}
       />
+
+      {/* 12. Modal Xác nhận Xóa Vụ Án */}
+      {caseToDelete && (
+        <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white rounded-lg shadow-2xl border border-rose-200 max-w-lg w-full overflow-hidden animate-in fade-in zoom-in-95 duration-150">
+            <div className="bg-[#991B1B] text-white px-5 py-3.5 flex items-center justify-between">
+              <div className="flex items-center gap-2.5">
+                <div className="w-8 h-8 rounded-full bg-red-800 flex items-center justify-center">
+                  <Trash2 className="w-4 h-4 text-white" />
+                </div>
+                <div>
+                  <h3 className="font-bold text-sm uppercase tracking-wide">Xác nhận xóa hồ sơ vụ án</h3>
+                  <p className="text-[11px] text-red-100">Hành động này sẽ xóa vĩnh viễn hồ sơ vụ án</p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setCaseToDelete(null)}
+                className="text-white hover:bg-red-800 rounded p-1 text-base font-bold transition-colors"
+                title="Đóng"
+              >
+                ✕
+              </button>
+            </div>
+
+            <div className="p-5 space-y-4">
+              <div className="bg-rose-50 border border-rose-200 rounded p-3 text-xs text-rose-900 space-y-1">
+                <div className="flex items-center gap-1.5 font-bold text-rose-950">
+                  <AlertTriangle className="w-4 h-4 text-rose-600 shrink-0" />
+                  <span>CẢNH BÁO QUAN TRỌNG:</span>
+                </div>
+                <p>
+                  Bạn đang yêu cầu xóa hồ sơ vụ án khỏi hệ thống quản lý của Tòa án. Toàn bộ các thông tin thụ lý, danh sách đương sự/bị cáo, các quyết định tố tụng, biện pháp ngăn chặn và lịch xét xử của vụ án này sẽ bị xóa hoàn toàn.
+                </p>
+              </div>
+
+              <div className="bg-slate-50 border border-slate-200 rounded p-3.5 space-y-2 text-xs">
+                <div className="flex items-center justify-between pb-2 border-b border-slate-200">
+                  <span className="text-slate-500 font-medium">Số thụ lý:</span>
+                  <span className="font-bold font-mono text-red-800 bg-red-50 px-2 py-0.5 rounded border border-red-200">
+                    {caseToDelete.docketNumber}
+                  </span>
+                </div>
+                <div className="flex items-start justify-between pb-2 border-b border-slate-200 gap-2">
+                  <span className="text-slate-500 font-medium shrink-0">Tên vụ án:</span>
+                  <span className="font-semibold text-slate-800 text-right">
+                    {caseToDelete.title}
+                  </span>
+                </div>
+                <div className="flex items-center justify-between pb-2 border-b border-slate-200">
+                  <span className="text-slate-500 font-medium">Loại vụ án:</span>
+                  <span className="font-semibold text-slate-700">
+                    {getCaseTypeName(caseToDelete.caseType)}
+                  </span>
+                </div>
+                <div className="flex items-center justify-between pb-2 border-b border-slate-200">
+                  <span className="text-slate-500 font-medium">Thẩm phán giải quyết:</span>
+                  <span className="font-semibold text-slate-800">
+                    {caseToDelete.assignedJudgeName || 'Chưa phân công'}
+                  </span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-slate-500 font-medium">Đương sự / Bị can:</span>
+                  <span className="font-semibold text-slate-700">
+                    {caseToDelete.litigants?.length || 0} người
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-slate-50 px-5 py-3 border-t border-slate-200 flex items-center justify-end gap-2.5">
+              <button
+                type="button"
+                onClick={() => setCaseToDelete(null)}
+                className="px-4 py-2 bg-white hover:bg-slate-100 text-slate-700 border border-slate-300 rounded font-semibold text-xs transition-colors"
+              >
+                Hủy bỏ
+              </button>
+              <button
+                type="button"
+                onClick={handleConfirmDeleteCase}
+                className="px-4 py-2 bg-[#991B1B] hover:bg-red-800 text-white rounded font-bold text-xs flex items-center gap-1.5 shadow-sm transition-colors"
+              >
+                <Trash2 className="w-3.5 h-3.5" />
+                <span>Xác nhận xóa vĩnh viễn</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

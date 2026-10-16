@@ -14,7 +14,8 @@ import {
   CheckCircle2, 
   ShieldAlert,
   PlusCircle,
-  User
+  User,
+  Trash2
 } from 'lucide-react';
 
 interface CaseListViewProps {
@@ -31,6 +32,7 @@ interface CaseListViewProps {
   onClearSearch?: () => void;
   onOpenTrialExtension?: (c: CourtCase) => void;
   onOpenDetentionExtension?: (c: CourtCase) => void;
+  onDeleteCase?: (c: CourtCase) => void;
   currentUser?: UserAccount;
   onDenyPermission?: (actionName: string, requiredRole: string) => void;
 }
@@ -49,6 +51,7 @@ export const CaseListView: React.FC<CaseListViewProps> = ({
   onClearSearch,
   onOpenTrialExtension,
   onOpenDetentionExtension,
+  onDeleteCase,
   currentUser,
   onDenyPermission,
 }) => {
@@ -507,6 +510,16 @@ export const CaseListView: React.FC<CaseListViewProps> = ({
                           >
                             <Eye className="w-3.5 h-3.5" />
                           </button>
+
+                          {onDeleteCase && (
+                            <button
+                              onClick={() => onDeleteCase(c)}
+                              className="p-1.5 bg-slate-50 hover:bg-rose-100 text-slate-500 hover:text-rose-700 rounded transition-colors"
+                              title="Xóa vụ án khỏi hệ thống"
+                            >
+                              <Trash2 className="w-3.5 h-3.5" />
+                            </button>
+                          )}
                         </div>
                       </td>
                     </tr>

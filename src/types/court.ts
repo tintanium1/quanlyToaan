@@ -296,6 +296,7 @@ export interface UserPermissions {
   canManageCourtSettings: boolean;      // Cài đặt thông tin Tòa án
   canManageTemplates: boolean;          // Quản lý hệ thống biểu mẫu tố tụng
   canManageAccounts: boolean;           // Quản trị tài khoản & phân quyền
+  canDeleteCase: boolean;               // Xóa hồ sơ vụ án khỏi hệ thống
 }
 
 export interface UserAccount {

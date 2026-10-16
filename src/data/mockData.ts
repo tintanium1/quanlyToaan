@@ -796,6 +796,7 @@ export const INITIAL_ACCOUNTS: UserAccount[] = [
       canManageCourtSettings: false,     // Không cài đặt đơn vị
       canManageTemplates: false,         // Không sửa biểu mẫu
       canManageAccounts: false,          // Không quản trị tài khoản
+      canDeleteCase: true,               // Xóa vụ án thụ lý nhầm / rút đơn
     },
     status: 'ACTIVE',
     lastLogin: '2026-06-27T08:30:00Z',
@@ -825,6 +826,7 @@ export const INITIAL_ACCOUNTS: UserAccount[] = [
       canManageCourtSettings: true,      // Cài đặt thông tin Tòa án
       canManageTemplates: true,          // Duyệt biểu mẫu chuẩn
       canManageAccounts: false,          // Giao cho IT quản trị
+      canDeleteCase: true,               // Quyền duyệt xóa hồ sơ vụ án
     },
     status: 'ACTIVE',
     lastLogin: '2026-06-27T07:45:00Z',
@@ -855,6 +857,7 @@ export const INITIAL_ACCOUNTS: UserAccount[] = [
       canManageCourtSettings: false,
       canManageTemplates: false,
       canManageAccounts: false,
+      canDeleteCase: true,               // Được quyền xóa hồ sơ vụ án được phân công
     },
     status: 'ACTIVE',
     lastLogin: '2026-06-27T08:15:00Z',
@@ -885,6 +888,7 @@ export const INITIAL_ACCOUNTS: UserAccount[] = [
       canManageCourtSettings: false,
       canManageTemplates: false,
       canManageAccounts: false,
+      canDeleteCase: true,               // Được quyền xóa hồ sơ vụ án được phân công
     },
     status: 'ACTIVE',
     lastLogin: '2026-06-26T14:10:00Z',
@@ -915,6 +919,7 @@ export const INITIAL_ACCOUNTS: UserAccount[] = [
       canManageCourtSettings: false,
       canManageTemplates: false,
       canManageAccounts: false,
+      canDeleteCase: false,              // Thư ký không có quyền xóa án
     },
     status: 'ACTIVE',
     lastLogin: '2026-06-27T08:00:00Z',
@@ -944,6 +949,7 @@ export const INITIAL_ACCOUNTS: UserAccount[] = [
       canManageCourtSettings: true,      // TOÀN QUYỀN cài đặt Tòa án
       canManageTemplates: true,          // TOÀN QUYỀN sửa biểu mẫu
       canManageAccounts: true,           // TOÀN QUYỀN QUẢN TRỊ TÀI KHOẢN & PHÂN QUYỀN
+      canDeleteCase: true,               // TOÀN QUYỀN XÓA VỤ ÁN
     },
     status: 'ACTIVE',
     lastLogin: '2026-06-27T07:30:00Z',

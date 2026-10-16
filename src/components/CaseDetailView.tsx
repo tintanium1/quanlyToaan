@@ -25,7 +25,8 @@ import {
   Gavel,
   History,
   Lock,
-  Shield
+  Shield,
+  Trash2
 } from 'lucide-react';
 
 interface CaseDetailViewProps {
@@ -37,6 +38,7 @@ interface CaseDetailViewProps {
   onBack: () => void;
   onOpenTrialExtension?: (c: CourtCase) => void;
   onOpenDetentionExtension?: (c: CourtCase, pm?: PreventiveMeasure) => void;
+  onDeleteCase?: (c: CourtCase) => void;
   currentUser?: UserAccount;
   onDenyPermission?: (actionName: string, requiredRole: string) => void;
 }
@@ -60,6 +62,7 @@ export const CaseDetailView: React.FC<CaseDetailViewProps> = ({
   onBack,
   onOpenTrialExtension,
   onOpenDetentionExtension,
+  onDeleteCase,
   currentUser,
   onDenyPermission,
 }) => {
@@ -315,6 +318,18 @@ export const CaseDetailView: React.FC<CaseDetailViewProps> = ({
                 >
                   <ShieldAlert className="w-3.5 h-3.5" />
                   <span>Gia hạn tạm giam</span>
+                </button>
+              )}
+
+              {onDeleteCase && (
+                <button
+                  type="button"
+                  onClick={() => onDeleteCase(caseItem)}
+                  className="px-2.5 py-1 bg-rose-50 hover:bg-rose-100 text-rose-800 border border-rose-300 rounded font-bold text-xs flex items-center gap-1 shadow-2xs transition-colors"
+                  title="Xóa hồ sơ vụ án này khỏi hệ thống"
+                >
+                  <Trash2 className="w-3.5 h-3.5 text-rose-600" />
+                  <span>Xóa vụ án</span>
                 </button>
               )}
             </div>

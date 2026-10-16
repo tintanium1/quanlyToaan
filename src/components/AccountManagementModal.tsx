@@ -144,6 +144,7 @@ export const AccountManagementModal: React.FC<AccountManagementModalProps> = ({
         canManageCourtSettings: false,
         canManageTemplates: false,
         canManageAccounts: false,
+        canDeleteCase: true,
       },
       status: 'ACTIVE',
     });
@@ -163,6 +164,7 @@ export const AccountManagementModal: React.FC<AccountManagementModalProps> = ({
       canManageCourtSettings: false,
       canManageTemplates: false,
       canManageAccounts: false,
+      canDeleteCase: false,
     };
 
     let title = 'Cán bộ';
@@ -174,6 +176,7 @@ export const AccountManagementModal: React.FC<AccountManagementModalProps> = ({
       newPerms.canCreateCase = true;
       newPerms.canEditCaseBasics = true;
       newPerms.canViewAllReports = true;
+      newPerms.canDeleteCase = true;
     } else if (newRole === 'LANH_DAO') {
       title = 'Chánh án Tòa án nhân dân';
       dept = 'Ban Lãnh đạo Tòa án';
@@ -190,6 +193,7 @@ export const AccountManagementModal: React.FC<AccountManagementModalProps> = ({
         canManageCourtSettings: true,
         canManageTemplates: true,
         canManageAccounts: false,
+        canDeleteCase: true,
       };
     } else if (newRole === 'THAM_PHAN') {
       title = 'Thẩm phán Sơ cấp / Trung cấp';
@@ -198,10 +202,12 @@ export const AccountManagementModal: React.FC<AccountManagementModalProps> = ({
       newPerms.canIssueJudgment = true;
       newPerms.canExtendDetention = true;
       newPerms.canManagePreventiveMeasures = true;
+      newPerms.canDeleteCase = true;
     } else if (newRole === 'THU_KY') {
       title = 'Thư ký viên Tòa án';
       dept = 'Tổ Thư ký Tòa án';
       newPerms.canEditCaseBasics = true;
+      newPerms.canDeleteCase = false;
     } else if (newRole === 'ADMIN') {
       title = 'Quản trị viên Hệ thống CNTT';
       dept = 'Tổ Công nghệ thông tin & Quản trị số liệu';
@@ -218,6 +224,7 @@ export const AccountManagementModal: React.FC<AccountManagementModalProps> = ({
         canManageCourtSettings: true,
         canManageTemplates: true,
         canManageAccounts: true,
+        canDeleteCase: true,
       };
     }
 
@@ -468,6 +475,7 @@ export const AccountManagementModal: React.FC<AccountManagementModalProps> = ({
                     { key: 'canManageCourtSettings', label: 'Cài đặt thông tin Tòa án', desc: 'Tên Tòa án, Chánh án, địa chỉ' },
                     { key: 'canManageTemplates', label: 'Quản lý hệ thống biểu mẫu', desc: 'Thêm, sửa, xóa mẫu văn bản' },
                     { key: 'canManageAccounts', label: 'Quản trị tài khoản & phân quyền', desc: 'Quyền Quản trị viên (Admin)' },
+                    { key: 'canDeleteCase', label: 'Xóa hồ sơ vụ án khỏi hệ thống', desc: 'Xóa vụ án thụ lý nhầm / rút đơn' },
                   ].map((p) => {
                     const isChecked = !!formData.permissions[p.key as keyof UserPermissions];
                     return (

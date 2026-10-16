@@ -4,7 +4,8 @@ export type NotificationType =
   | 'DETENTION_EXPIRING' // Biện pháp tạm giam sắp hết hạn (< 5 ngày)
   | 'JUDGE_ASSIGNED'     // Thẩm phán vừa được phân công vụ án mới
   | 'NEW_CASE'           // Vụ án mới được nhập thụ lý
-  | 'DECISION_ISSUED';   // Quyết định tố tụng / Bản án mới được ban hành
+  | 'DECISION_ISSUED'   // Quyết định tố tụng / Bản án mới được ban hành
+  | 'CASE_DELETED';      // Đã xóa vụ án khỏi hệ thống
 
 export interface CourtNotification {
   id: string;
